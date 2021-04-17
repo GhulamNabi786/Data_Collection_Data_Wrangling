@@ -1,7 +1,7 @@
 ---
 title: "Data Collection and Data Wrangling"
-author: "Sana Rasheed"
-date: "July 19, 2020"
+author: "Ghulam Nabi"
+date: "April 18, 2021"
 output: html_document
 ---
 
@@ -29,7 +29,20 @@ USPersonalExpenditure
 ```
 
 ```{r }
-### start solution ####
+us_personal <- USPersonalExpenditure
+us_personal <- as.data.frame(us_personal)
+us_personal
+```
+
+
+```{r }
+library(dplyr)
+sum_arise <- summarise_at(us_personal,vars("1940","1945","1950","1955","1960"),funs(mean,sd),na.rm=T)
+sum_arise
+mutation <- mutate(us_personal,average_value = summarise_at(us_personal,vars("1940","1945","1950","1955","1960"),funs(mean),na.rm=T))
+mutation
+
+
 ```
 
 
@@ -45,11 +58,6 @@ USPersonalExpenditure
 
 ```{r }
 
-```
-
-
-```{r }
-### end solution ####
 ```
 
 ### Question 2 
@@ -67,32 +75,36 @@ filename <- "msleep_ggplot2.csv"
 
 
 ```{r }
-### start solution ####
+download.file(url,destfile = "msleep_ggplot2.csv")
 ```
 
 
 ```{r }
-
+msleep_ggplot2 <- read.csv("msleep_ggplot2.csv")
+msleep_ggplot2
 ```
 
 
 ```{r }
+mutate(msleep_ggplot2,average_bodywt = summarise(msleep_ggplot2,mean=mean(bodywt),na.rm=T)) %>%
+  select(genus,order,average_bodywt)
 
-```
-
-
-```{r }
-
-```
-
-
-```{r }
 
 ```
 
 
 ```{r }
-### end solution ###
+mutate(msleep_ggplot2,average_rem=summarise(msleep_ggplot2,mean=mean(sleep_rem),na.rm=T)) %>% select(average_rem,order)
+```
+
+
+```{r }
+sum(is.na(msleep_ggplot2))
+# there are total 136 missing values 
+colSums(is.na(msleep_ggplot2)) # per column
+
+# Justification of imputing missing values 
+# I would completely take mean/mode/median of all values as find it more easy and all values will be fit in with easy way
 ```
 
 ### Good job! You've completed this section!
@@ -106,7 +118,22 @@ filename <- "msleep_ggplot2.csv"
 
 
 ```{r }
-### start solution ####
+filter(msleep_ggplot2,order==c("carnivores","primates")) %>% select(order,sleep_rem,sleep_total)
+```
+
+
+```{r }
+library(tidyr)
+spread(msleep_ggplot2,order,name)
+spread(msleep_ggplot2,order,genus)
+spread(msleep_ggplot2,order,vore)
+spread(msleep_ggplot2,order,conservation)
+spread(msleep_ggplot2,order,sleep_total)
+spread(msleep_ggplot2,order,sleep_rem)
+spread(msleep_ggplot2,order,sleep_cycle)
+spread(msleep_ggplot2,order,awake)
+spread(msleep_ggplot2,order,brainwt)
+spread(msleep_ggplot2,order,bodywt)
 ```
 
 
@@ -137,11 +164,6 @@ filename <- "msleep_ggplot2.csv"
 
 ```{r }
 
-```
-
-
-```{r }
-### end solution ####
 ```
 
 ### Good job! You've completed this entire exercise!
